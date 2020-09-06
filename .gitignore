@@ -1,1 +1,5 @@
 .gitignore
+seniorDesign
+img/good/*
+img/bad/*
+__pycache__

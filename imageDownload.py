@@ -1,6 +1,6 @@
 import requests
 import shutil
-
+import os.path
 #params = {'vetted_status' : 'good'}
 def downloadImages(numberOfObservations = 100, params = {}, updateFunction = None):
     url = 'https://network.satnogs.org/api/observations/'
@@ -28,9 +28,9 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                 status = observation['vetted_status'] == 'good'
                 if imgURL:
                     imgRequest = requests.get(imgURL, stream = True)
-                    path = 'img/bad/'
+                    path = './img/bad/'
                     if status:
-                        path = 'img/good/'
+                        path = './img/good/'
                     file = open(path + str(observation['id']) + '.png', "wb")
                     file.write(imgRequest.content)
                     file.close()
