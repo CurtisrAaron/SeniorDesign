@@ -1,4 +1,4 @@
 {
     "status" : ["good", "bad", "failed", "unknown"],
-    "station id" : ["1", "2", "3", "4", "6", "7", "8"]
+    "ground_station" : ["105"]
 }

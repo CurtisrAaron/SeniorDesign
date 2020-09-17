@@ -17,6 +17,7 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
         observations = x.json()
 
         # add multithreading?
+        badCount = 0
 
         for observation in observations:
             imgCount += 1
@@ -31,18 +32,20 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                     path = './img/bad/'
                     if status:
                         path = './img/good/'
+                    else:
+                        badCount += 1
+                        print("number of bad = " + str(badCount))
                     file = open(path + str(observation['id']) + '.png', "wb")
                     file.write(imgRequest.content)
                     file.close()
             
         print('len = ' + str(len(x.json())))
-        nextPageUrl = x.links['next']['url']
-        print('next page = ' + nextPageUrl)
-        url = nextPageUrl
-        params = {}
-        count += 1
-
-        if nextPageUrl:
+        if 'next' in x.links:
+            nextPageUrl = x.links['next']['url']
+            print('next page = ' + nextPageUrl)
+            url = nextPageUrl
+            params = {}
+            count += 1
             shouldContinue = True
         else:
             shouldContinue = False
