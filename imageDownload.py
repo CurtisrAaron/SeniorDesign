@@ -1,6 +1,10 @@
 import requests
 import shutil
 import os.path
+import pymongo
+from mongoengine import *
+import json
+from dbtest1 import *
 #params = {'vetted_status' : 'good'}
 def downloadImages(numberOfObservations = 100, params = {}, updateFunction = None):
     url = 'https://network.satnogs.org/api/observations/'
@@ -8,6 +12,8 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
     imgCount = 0
     shouldContinue = True
     shouldDownloadImages = True
+
+    connect("Senior-Design-Project", host='mongodb+srv://dduckworth:x2FXe?7J@senior-design-project.xpkmu.mongodb.net/test?authSource=admin&replicaSet=atlas-q1uqgf-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
 
     while shouldContinue and count < (numberOfObservations / 25):
         x = requests.get(url, params=params)
@@ -29,11 +35,18 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                 if imgURL:
                     imgRequest = requests.get(imgURL, stream = True)
                     path = './img/bad/'
+
                     if status:
                         path = './img/good/'
                     file = open(path + str(observation['id']) + '.png', "wb")
                     file.write(imgRequest.content)
                     file.close()
+                    data = metaData(
+                        transmitter_mode = observation["transmitter_mode"],
+                        status = observation["vetted_status"],
+                        Id = observation['id'],
+                        waterfall = path + str(observation['id']) + '.png'
+                    ).save()
             
         print('len = ' + str(len(x.json())))
         nextPageUrl = x.links['next']['url']
