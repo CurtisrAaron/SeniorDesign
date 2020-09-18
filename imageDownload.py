@@ -13,7 +13,7 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
     shouldContinue = True
     shouldDownloadImages = True
 
-    connect("Senior-Design-Project", host='mongodb+srv://dduckworth:x2FXe?7J@senior-design-project.xpkmu.mongodb.net/test?authSource=admin&replicaSet=atlas-q1uqgf-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
+    connect("Senior-Design-Project", host='mongodb://localhost/test')
 
     while shouldContinue and count < (numberOfObservations / 25):
         x = requests.get(url, params=params)
