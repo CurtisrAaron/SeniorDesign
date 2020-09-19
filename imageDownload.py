@@ -4,7 +4,7 @@ import os.path
 import pymongo
 from mongoengine import *
 import json
-from dbtest1 import *
+from DbModels import *
 #params = {'vetted_status' : 'good'}
 def downloadImages(numberOfObservations = 100, params = {}, updateFunction = None):
     url = 'https://network.satnogs.org/api/observations/'

@@ -9,7 +9,8 @@ class MetaData(Document):
     status = StringField(required= True)
     Id = IntField()
     waterfall = StringField()
-    user_verified_status = StringField()
+    user_vetted_status = StringField(default = 'not vetted')
+    model_vetted_status = StringField(default = 'not vetted')
 
 
     def json(self):
