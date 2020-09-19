@@ -19,7 +19,6 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
         x = requests.get(url, params=params)
         print(x.status_code)
 
-
         observations = x.json()
 
         # add multithreading?
@@ -45,7 +44,7 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                     file = open(path + str(observation['id']) + '.png', "wb")
                     file.write(imgRequest.content)
                     file.close()
-                    data = metaData(
+                    data = MetaData(
                         transmitter_mode = observation["transmitter_mode"],
                         status = observation["vetted_status"],
                         Id = observation['id'],
