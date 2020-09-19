@@ -3,3 +3,5 @@ seniorDesign
 img/good/*
 img/bad/*
 __pycache__
+.vscode
+model.pickle

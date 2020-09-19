@@ -1,3 +1,4 @@
 {
-    "status" : ["good", "bad", "failed", "unknown"]
+    "status" : ["good", "bad", "failed", "unknown"],
+    "ground_station" : ["105"]
 }
