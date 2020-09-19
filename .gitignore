@@ -5,3 +5,4 @@ img/bad/*
 __pycache__
 .vscode
 model.pickle
+.vscode/settings.json

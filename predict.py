@@ -4,6 +4,8 @@ import numpy as np
 from skimage.io import imread
 from skimage.transform import resize
 import pickle
+from mongoengine import *
+from DbModels import *
 
 #predict on individual images
 
@@ -25,15 +27,22 @@ def load_image_file(img_path, dimension=(200, 400)):
                  target_names=['bad','good'],
                  DESCR=descr)
 
-good_image = load_image_file("img/good/1991436.png")
-bad_image = load_image_file("img/bad/1235140.png")
+connect("Senior-Design-Project", host='mongodb://localhost/test')
+
+
+observations = MetaData.objects.filter(Q(model_vetted_status = 'not vetted') | Q(model_vetted_status = None))
+
+print('len = ' + str(len(observations)))
 
 svmfile = open('model.pickle', 'rb')
 svm = pickle.load(svmfile)
+count = 0
+for observation in observations:
+    image = load_image_file(observation.waterfall)
+    observation.model_vetted_status = 'good ' if svm.predict(image.data) else 'bad'
+    observation.save()
+    if count % 10 == 0:
+        print('{0} / {1}'.format(count, len(observations)))
+    count += 1
 
-predict = svm.predict(good_image.data)
-print('good ' if predict else 'bad')
-
-predict = svm.predict(bad_image.data)
-print('good ' if predict else 'bad')
 
