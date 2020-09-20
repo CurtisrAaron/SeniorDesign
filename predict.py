@@ -9,7 +9,7 @@ from DbModels import *
 
 #predict on individual images
 
-def load_image_file(img_path, dimension=(200, 400)):
+def load_image_file(img_path, dimension=(300, 600)):
     descr = "A single image classification test"
     images = []
     flat_data = []
@@ -32,12 +32,15 @@ connect("Senior-Design-Project", host='mongodb://localhost/test')
 
 observations = MetaData.objects.filter(Q(model_vetted_status = 'not vetted') | Q(model_vetted_status = None))
 
+observations = MetaData.objects()
+
 print('len = ' + str(len(observations)))
 
-svmfile = open('model.pickle', 'rb')
+svmfile = open('09-19_16:20:08model.pickle', 'rb')
 svm = pickle.load(svmfile)
 count = 0
 for observation in observations:
+    #print(observation.waterfall)
     image = load_image_file(observation.waterfall)
     observation.model_vetted_status = 'good ' if svm.predict(image.data) else 'bad'
     observation.save()

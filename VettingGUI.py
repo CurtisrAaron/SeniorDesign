@@ -65,7 +65,7 @@ while True:
         window['filterlayout'].update(visible=True)
         print ('Event is filters')
     if event == 'refresh':
-        query = Q(model_vetted_status='good')
+        query = (Q(model_vetted_status='good') & Q(status='bad')) | (Q(model_vetted_status='bad') & Q(status='good'))
         #query = query & Q(user_vetted_status='good')
         observations = MetaData.objects(query)
         obvCount = len(observations)

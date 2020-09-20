@@ -7,10 +7,11 @@ from skimage.io import imread
 from skimage.transform import resize
 from sklearn import metrics
 import pickle
+from datetime import datetime
 
 #823 × 1606
 
-def load_image_files(container_path, dimension=(200, 400)):
+def load_image_files(container_path, dimension=(300, 600)):
     """
     Load image files with categories as subfolder names 
     which performs like scikit-learn sample dataset
@@ -67,7 +68,7 @@ print(image_dataset)
 #Create a svm Classifier-
 clf = svm.SVC(kernel='linear') # Linear Kernel
 
-X_train, X_test, y_train, y_test = train_test_split(image_dataset.data, image_dataset.target, test_size=0.3,random_state=109)
+X_train, X_test, y_train, y_test = train_test_split(image_dataset.data, image_dataset.target, test_size=0.3,random_state=110)
 
 #Train the model using the training sets
 clf.fit(X_train, y_train)
@@ -81,5 +82,5 @@ print(X_train)
 
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-with open('model.pickle', 'wb') as handle:
+with open((datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
     pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
