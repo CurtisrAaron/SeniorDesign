@@ -42,7 +42,7 @@ count = 0
 for observation in observations:
     #print(observation.waterfall)
     image = load_image_file(observation.waterfall)
-    observation.model_vetted_status = 'good ' if svm.predict(image.data) else 'bad'
+    observation.model_vetted_status = 'good' if svm.predict(image.data) else 'bad'
     observation.save()
     if count % 10 == 0:
         print('{0} / {1}'.format(count, len(observations)))
