@@ -27,7 +27,7 @@ layout.append([sg.Text("number of results", font=("Helvetica", 25), text_color='
 
 resultsNumber = []
 
-for x in range(1, 12 + 1):
+for x in range(1, 50 + 1):
     resultsNumber.append(x * 200)
 
 layout.append([sg.Listbox(values=resultsNumber, size=(30,4), font=("Helvetica", 25), key='obvsNumber')])

@@ -5,4 +5,7 @@ img/bad/*
 __pycache__
 .vscode
 model.pickle
+*.pickle
 .vscode/settings.json
+.DS_Store
+.machineLearning.py.swp

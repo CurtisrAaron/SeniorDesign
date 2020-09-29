@@ -11,7 +11,7 @@ from datetime import datetime
 
 #823 × 1606
 
-def load_image_files(container_path, dimension=(300, 600)):
+def load_image_files(container_path, dimension=(400, 800)):
     """
     Load image files with categories as subfolder names 
     which performs like scikit-learn sample dataset
@@ -68,7 +68,7 @@ print(image_dataset)
 #Create a svm Classifier-
 clf = svm.SVC(kernel='linear') # Linear Kernel
 
-X_train, X_test, y_train, y_test = train_test_split(image_dataset.data, image_dataset.target, test_size=0.3,random_state=110)
+X_train, X_test, y_train, y_test = train_test_split(image_dataset.data, image_dataset.target, test_size=0.1,random_state=101)
 
 #Train the model using the training sets
 clf.fit(X_train, y_train)

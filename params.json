@@ -1,4 +1,5 @@
 {
     "status" : ["good", "bad", "failed", "unknown"],
-    "ground_station" : ["105"]
+    "ground_station" : ["105"],
+	"transmitter_mode" : ["CW", "FSK"]
 }

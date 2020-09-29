@@ -36,16 +36,14 @@ observations = MetaData.objects()
 
 print('len = ' + str(len(observations)))
 
-svmfile = open('09-19_16:20:08model.pickle', 'rb')
+svmfile = open('model.pickle', 'rb')
 svm = pickle.load(svmfile)
 count = 0
 for observation in observations:
     #print(observation.waterfall)
-    image = load_image_file(observation.waterfall)
+    image = load_image_file(observation.waterfall, dimension = (200, 400))
     observation.model_vetted_status = 'good' if svm.predict(image.data) else 'bad'
     observation.save()
     if count % 10 == 0:
         print('{0} / {1}'.format(count, len(observations)))
     count += 1
-
-
