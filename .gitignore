@@ -9,3 +9,4 @@ model.pickle
 .vscode/settings.json
 .DS_Store
 .machineLearning.py.swp
+*.zip

@@ -1,12 +1,14 @@
+import numpy as np
+import pickle
+import sys
+
 from pathlib import Path
 from sklearn.utils import Bunch
 from sklearn import svm
-import numpy as np
 from sklearn.model_selection import train_test_split
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn import metrics
-import pickle
 from datetime import datetime
 
 #823 × 1606
@@ -49,7 +51,8 @@ def load_image_files(container_path, dimension=(400, 800)):
             target.append(i)
             count += 1
             if (count % 10 == 0):
-                print("count = " + str(count) + " / " + str(totalCount) + " in folder " + str(folderCount) + " / " + str(totalFolders))
+                sys.stdout.write("\rcount = " + str(count) + " / " + str(totalCount) + " in folder " + str(folderCount) + " / " + str(totalFolders))
+                sys.stdout.flush()
         folderCount += 1
     flat_data = np.array(flat_data)
     target = np.array(target)
@@ -61,7 +64,9 @@ def load_image_files(container_path, dimension=(400, 800)):
                  images=images,
                  DESCR=descr)
 
-image_dataset = load_image_files("img/")
+resolution = (100,200)
+
+image_dataset = load_image_files("img/", resolution)
 
 print(image_dataset)
 
@@ -82,5 +87,5 @@ print(X_train)
 
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
-with open((datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
+with open(('sk-' + str(resolution[0]) + 'x' + str(resolution[1]) + '-' + datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
     pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
