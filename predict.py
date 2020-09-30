@@ -8,6 +8,7 @@ from DbModels import *
 import pickle
 import glob, os, os.path
 import numpy as np
+import sys
 
 #predict on individual images
 
@@ -86,7 +87,7 @@ except:
 observations = MetaData.objects.filter(Q(model_vetted_status = 'not vetted') | Q(model_vetted_status = None))
 observations = MetaData.objects()
 
-print('len = ' + str(len(observations)))
+print('predicting = ' + str(len(observations)) + ' observations')
 
 if is_sk:
     svmfile = open(modelname, 'rb')
@@ -98,5 +99,6 @@ if is_sk:
         observation.model_vetted_status = 'good' if svm.predict(image.data) else 'bad'
         observation.save()
         if count % 10 == 0:
-            print('{0} / {1}'.format(count, len(observations)))
+            sys.stdout.write('\r{0} / {1}'.format(count, len(observations)))
+            sys.stdout.flush()
         count += 1

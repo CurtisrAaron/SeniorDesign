@@ -64,7 +64,7 @@ def load_image_files(container_path, dimension=(400, 800)):
                  images=images,
                  DESCR=descr)
 
-resolution = (100,200)
+resolution = (80,160)
 
 image_dataset = load_image_files("img/", resolution)
 

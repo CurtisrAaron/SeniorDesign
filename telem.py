@@ -16,7 +16,7 @@ with open('params.json') as f:
 
 
 
-layout = [  [sg.Text('Some text on Row 1', font=("Helvetica", 25), text_color='black')]]
+layout = [  [sg.Text('Telem Download tool', font=("Helvetica", 25), text_color='black')]]
 
 for field in params:
     layout.append([sg.Text(field, font=("Helvetica", 25), text_color='black')])
