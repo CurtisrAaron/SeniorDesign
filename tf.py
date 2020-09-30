@@ -124,6 +124,6 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
-with open(('tf-' + str(resolution[0]) + 'x' + str(resolution[1]) + '-' + datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
+with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
     pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
