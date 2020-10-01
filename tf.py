@@ -8,8 +8,10 @@ import pathlib
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
+from datetime import datetime
 
 
+startime = datetime.now()
 
 data_dir = pathlib.Path('./img')
 
@@ -18,14 +20,14 @@ image_count = len(list(data_dir.glob('*/*.png')))
 print(image_count)
 
 batch_size = 32
-img_height = 600
-img_width = 300
+img_height = 200
+img_width = 100
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
   validation_split=0.2,
   subset="training",
-  seed=123,
+  seed=146,
   image_size=(img_height, img_width),
   batch_size=batch_size)
 
@@ -33,7 +35,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
   validation_split=0.2,
   subset="validation",
-  seed=123,
+  seed=146,
   image_size=(img_height, img_width),
   batch_size=batch_size)
 
@@ -41,7 +43,7 @@ class_names = train_ds.class_names
 print(class_names)
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-
+  
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
@@ -57,17 +59,19 @@ num_classes = 2
 
 model = Sequential([
   layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
-  layers.Conv2D(32, kernel_size=(3,3), padding='same', activation='relu'),
-  layers.Conv2D(50, kernel_size=(3,3), padding='same', activation='relu'),
-  layers.MaxPooling2D((2,2)),
-  layers.Conv2D(30, kernel_size=(3,3), padding='same', activation='relu'),
-  layers.MaxPooling2D((2,2)),
-  layers.Conv2D(15, kernel_size=(3,3), padding='same', activation='relu'),
+  layers.Conv2D(32, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
+  layers.MaxPooling2D(),
+  layers.Conv2D(64, 3, padding='same', activation='relu'),
+  layers.Conv2D(128, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
+  layers.MaxPooling2D(),
+  layers.Conv2D(256, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.5),
+  layers.MaxPooling2D(),
   layers.Flatten(),
-  layers.Dense(128, activation='relu'),
-  layers.Dense(64, activation='relu'),
-  layers.Dropout(rate=0.2),
-  layers.Dense(num_classes)
+  layers.Dense(12, activation='relu'),
+  layers.Dense(num_classes - 1,activation='sigmoid'),
 ])
 # model = Sequential([
 #     layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
@@ -75,7 +79,7 @@ model = Sequential([
 #     layers.Conv2D(200,kernel_size=(3,3),activation='relu'),
 #     layers.MaxPool2D(5,5),
 #     layers.Conv2D(180,kernel_size=(3,3),activation='relu'),
-#     layers.Conv2D(140,kernel_size=(3,3),activation='relu'),
+#     layers.Conv2D(140,kernel_size=(3,3),activation='relu'), 
 #     layers.Conv2D(100,kernel_size=(3,3),activation='relu'),
 #     layers.Conv2D(50,kernel_size=(3,3),activation='relu'),
 #     layers.MaxPool2D(5,5),
@@ -89,20 +93,20 @@ model = Sequential([
 
 #optimizer = tf.keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
 
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.BinaryCrossentropy(from_logits=False, label_smoothing=0, reduction="auto", name="binary_crossentropy"),
-              metrics=['accuracy'])
+model.compile(optimizer=tf.keras.optimizers.SGD(),
+              loss=tf.keras.losses.binary_crossentropy,
+              metrics=["binary_accuracy"])
 
 model.summary()
 
-epochs=1
+epochs=35
 history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=epochs
 )
 
-acc = history.history['accuracy']
+acc = history.history['binary_accuracy']
 val_acc = history.history['val_accuracy']
 
 loss=history.history['loss']
@@ -124,6 +128,7 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
-with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
+with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model.pickle'), 'wb') as handle:
     pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+print('elapsed time = ' + str(datetime.now() - starttime))
