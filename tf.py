@@ -20,8 +20,8 @@ image_count = len(list(data_dir.glob('*/*.png')))
 print(image_count)
 
 batch_size = 32
-img_height = 200
-img_width = 100
+img_height = 400
+img_width = 200
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
@@ -71,7 +71,7 @@ model = Sequential([
   layers.MaxPooling2D(),
   layers.Flatten(),
   layers.Dense(12, activation='relu'),
-  layers.Dense(num_classes - 1,activation='sigmoid'),
+  layers.Dense(num_classes - 1 ,activation='sigmoid'),
 ])
 # model = Sequential([
 #     layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
@@ -106,7 +106,7 @@ history = model.fit(
   epochs=epochs
 )
 
-acc = history.history['binary_accuracy']
+acc = history.history['val_binary_accuracy']
 val_acc = history.history['val_accuracy']
 
 loss=history.history['loss']
