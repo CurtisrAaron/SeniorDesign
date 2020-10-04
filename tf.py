@@ -10,8 +10,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from datetime import datetime
 
-
-startime = datetime.now()
+starttime = datetime.now()
 
 data_dir = pathlib.Path('./img')
 
@@ -60,38 +59,35 @@ num_classes = 2
 model = Sequential([
   layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
   layers.Conv2D(32, 3, padding='same', activation='relu'),
+  layers.Conv2D(32, 3, padding='same', activation='relu'),
   layers.Dropout(rate=0.3),
   layers.MaxPooling2D(),
   layers.Conv2D(64, 3, padding='same', activation='relu'),
+  layers.Conv2D(64, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
+  layers.MaxPooling2D(),
+  layers.Conv2D(128, 3, padding='same', activation='relu'),
   layers.Conv2D(128, 3, padding='same', activation='relu'),
   layers.Dropout(rate=0.3),
   layers.MaxPooling2D(),
   layers.Conv2D(256, 3, padding='same', activation='relu'),
-  layers.Dropout(rate=0.5),
+  layers.Conv2D(256, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
+  layers.MaxPooling2D(),
+  layers.Conv2D(256, 3, padding='same', activation='relu'),
+  layers.Conv2D(256, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
+  layers.MaxPooling2D(),
+  layers.Conv2D(512, 3, padding='same', activation='relu'),
+  layers.Conv2D(512, 3, padding='same', activation='relu'),
+  layers.Dropout(rate=0.3),
   layers.MaxPooling2D(),
   layers.Flatten(),
-  layers.Dense(12, activation='relu'),
+  layers.Dense(32, activation='relu'),
+  layers.Dense(16, activation='relu'),
+  layers.Dense(8, activation='relu'),
   layers.Dense(num_classes - 1 ,activation='sigmoid'),
 ])
-# model = Sequential([
-#     layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
-#     layers.Conv2D(300,kernel_size=(3,3),activation='relu',input_shape=(img_height,img_width,3)),
-#     layers.Conv2D(200,kernel_size=(3,3),activation='relu'),
-#     layers.MaxPool2D(5,5),
-#     layers.Conv2D(180,kernel_size=(3,3),activation='relu'),
-#     layers.Conv2D(140,kernel_size=(3,3),activation='relu'), 
-#     layers.Conv2D(100,kernel_size=(3,3),activation='relu'),
-#     layers.Conv2D(50,kernel_size=(3,3),activation='relu'),
-#     layers.MaxPool2D(5,5),
-#     layers.Flatten(),
-#     layers.Dense(180,activation='relu'),
-#     layers.Dense(100,activation='relu'),
-#     layers.Dense(50,activation='relu'),
-#     layers.Dropout(rate=0.2),
-#     layers.Dense(num_classes)])
-
-
-#optimizer = tf.keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
 
 model.compile(optimizer=tf.keras.optimizers.SGD(),
               loss=tf.keras.losses.binary_crossentropy,
@@ -99,15 +95,15 @@ model.compile(optimizer=tf.keras.optimizers.SGD(),
 
 model.summary()
 
-epochs=35
+epochs=1
 history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=epochs
 )
 
-acc = history.history['val_binary_accuracy']
-val_acc = history.history['val_accuracy']
+acc = history.history['binary_accuracy']
+val_acc = history.history['val_binary_accuracy']
 
 loss=history.history['loss']
 val_loss=history.history['val_loss']
@@ -126,9 +122,16 @@ plt.plot(epochs_range, loss, label='Training Loss')
 plt.plot(epochs_range, val_loss, label='Validation Loss')
 plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
-plt.show()
 
-with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model.pickle'), 'wb') as handle:
-    pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model.pickle'), 'wb') as handle:
+#     pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+filename = 'tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model'
+
+model.save(filename)
+
 
 print('elapsed time = ' + str(datetime.now() - starttime))
+
+plt.show()
