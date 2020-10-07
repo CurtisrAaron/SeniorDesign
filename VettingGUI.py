@@ -48,8 +48,10 @@ obvIndex = 0
 framewidth = 40
 imgSize = (300, 600)
 framelayout = [[sg.Text('Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status']), key = 'metadata' , size = (framewidth,8))] , [ sg.Button('Good' , size = (framewidth,4))] , [ sg.Button('Bad' , size = (framewidth,4))] , [ sg.Button('Next' , size = (framewidth,4))] , [ sg.Button('Back' , size = (framewidth,4))]]
-filterLayout = [[sg.Text('User Vetted Status')],[sg.Checkbox('good'), sg.Checkbox('bad')]]
-layout = [[sg.Text('Observation ID: {0}'.format(observations[obvIndex]['Id']), key = 'observation_id'), sg.Text('{0} / {1}'.format(obvIndex, obvCount), key = 'observation_count', size = (65, 1)), sg.Button('filters'), sg.Button('refresh')],[sg.Frame('' , filterLayout, visible=False, key='filterlayout')],[sg.Image(data=convert_to_bytes(observations[obvIndex]['waterfall'], imgSize), size = imgSize, key = 'image'), sg.Frame('' , framelayout)]]
+ModelFilterLayout = [[sg.Text('Model Vetted Status')],[sg.Checkbox('good', key="filter-model-good"), sg.Checkbox('bad', key="filter-model-bad")]]
+UserFilterLayout = [[sg.Text('User Vetted Status')],[sg.Checkbox('good', key="filter-user-good"), sg.Checkbox('bad', key="filter-user-bad")]]
+SatnogsFilterLayout = [[sg.Text('Satnog Vetted Status')],[sg.Checkbox('good', key="filter-satnogs-good"), sg.Checkbox('bad', key="filter-satnogs-bad")]]
+layout = [[sg.Text('Observation ID: {0}'.format(observations[obvIndex]['Id']), key = 'observation_id'), sg.Text('{0} / {1}'.format(obvIndex, obvCount), key = 'observation_count', size = (65, 1)), sg.Button('filters'), sg.Button('refresh')],[sg.Frame('',[[sg.Frame('' , UserFilterLayout, visible=False, key='userfilterlayout', size=(60,10)),sg.Frame('' , ModelFilterLayout, visible=False, key='modelfilterlayout', size=(60,10)),sg.Frame('' , SatnogsFilterLayout, visible=False, key='satnogsfilterlayout', size=(60,10))]],size= (80,20))],[sg.Image(data=convert_to_bytes(observations[obvIndex]['waterfall'], imgSize), size = imgSize, key = 'image'), sg.Frame('' , framelayout)]]
 window = sg.Window('Vetting GUI',layout)
 
 while True:
@@ -62,11 +64,34 @@ while True:
         observation.save()
         print ('Event is Good')
     if event == 'filters':
-        window['filterlayout'].update(visible=True)
+        window['userfilterlayout'].update(visible=True)
+        window['modelfilterlayout'].update(visible=True)
+        window['satnogsfilterlayout'].update(visible=True)
         print ('Event is filters')
     if event == 'refresh':
-        query = (Q(model_vetted_status='good') & Q(status='bad')) | (Q(model_vetted_status='bad') & Q(status='good'))
+        print(window['filter-user-good'].get())
+        print(window['filter-user-bad'].get())
+        query = Q(status='')
+        #query = (Q(model_vetted_status='good') & Q(status='bad')) | (Q(model_vetted_status='bad') & Q(status='good'))
         #query = query & Q(user_vetted_status='good')
+        if window['filter-user-good'].get():
+            print("Good is checked")
+            query = query | Q(user_vetted_status='good')
+        if window['filter-user-bad'].get():
+            print("Bad is checked")
+            query = query | Q(user_vetted_status='bad')
+        if window['filter-model-good'].get():
+            print("Good is checked")
+            query = query | Q(model_vetted_status='good')
+        if window['filter-model-bad'].get():
+            print("Bad is checked")
+            query = query | Q(model_vetted_status='bad')
+        if window['filter-satnogs-good'].get():
+            print("Good is checked")
+            query = query | Q(status='good')
+        if window['filter-satnogs-bad'].get():
+            print("Bad is checked")
+            query = query | Q(status='bad')
         observations = MetaData.objects(query)
         obvCount = len(observations)
         obvIndex = 0
