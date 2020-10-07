@@ -10,6 +10,8 @@ from skimage.io import imread
 from skimage.transform import resize
 from sklearn import metrics
 from datetime import datetime
+from resize import *
+import numpy
 
 #823 × 1606
 
@@ -44,7 +46,10 @@ def load_image_files(container_path, dimension=(400, 800)):
         totalCount = len(list(direc.glob('*')))
         count = 0
         for file in direc.iterdir():
-            img = imread(file)
+            #img = imread(file)
+
+            img = numpy.array(modifiedImage(file))
+
             img_resized = resize(img, dimension, anti_aliasing=True, mode='reflect')
             flat_data.append(img_resized.flatten()) 
             images.append(img_resized)
