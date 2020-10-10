@@ -56,8 +56,17 @@ def load_image_files(container_path, dimension=(400, 800)):
             target.append(i)
             count += 1
             if (count % 10 == 0):
-                sys.stdout.write("\rcount = " + str(count) + " / " + str(totalCount) + " in folder " + str(folderCount) + " / " + str(totalFolders))
+                dotTotal = 100
+                dotCount = int((count / totalCount) * dotTotal)
+                dots = ' ['
+                for j in range(dotCount):
+                    dots = dots + '.'
+                for j in range(dotTotal - dotCount):
+                    dots = dots + ' '
+                dots = dots + ']'
+                sys.stdout.write("\rcount = " + str(count) + " / " + str(totalCount) + " in folder " + str(folderCount) + " / " + str(totalFolders) + dots + '\t')
                 sys.stdout.flush()
+
         folderCount += 1
     flat_data = np.array(flat_data)
     target = np.array(target)
@@ -69,7 +78,7 @@ def load_image_files(container_path, dimension=(400, 800)):
                  images=images,
                  DESCR=descr)
 
-resolution = (80,160)
+resolution = (160,320)
 
 image_dataset = load_image_files("img/", resolution)
 

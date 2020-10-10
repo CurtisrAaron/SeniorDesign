@@ -13,9 +13,9 @@ def modifiedImage(imagePath):
 
     center = (right - left) / 2
 
-    left = center - 26
+    left = left + center - 26
     top = 0
-    right = center + 25
+    right = right - center + 25
     bottom = height
 
     im2 = im.crop((left, top, right, bottom))
@@ -30,3 +30,8 @@ def modifiedImage(imagePath):
 
     #dst.show()
     return dst
+
+if __name__ == "__main__":
+    print('hello')
+    dst = modifiedImage('img/good/2904901.png')
+    dst.show()
