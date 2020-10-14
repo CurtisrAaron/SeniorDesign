@@ -95,8 +95,8 @@ if not is_sk and not is_tf:
 
 try:
     resString = modelname.split('-')[1].split('x')
-    resolution_height = int(resString[0])
-    resolution_width = int(resString[1])
+    resolution_height = int(resString[1])
+    resolution_width = int(resString[0])
     print(f'img height = {resolution_height}')
     print(f'img width = {resolution_width}')
 except:
@@ -142,7 +142,8 @@ if is_tf:
         image = keras.preprocessing.image.img_to_array(image)
         image = np.expand_dims(image, axis = 0)
         prediction = model.predict([image], batch_size = 1)
-        #print('prediction = ' + str(prediction))
+        classification = model.predict_classes([image], batch_size = 1)
+        #print('prediction = ' + str(classification) + ' actual = ' + observation.status + ' prediction =' + str(prediction))
         observation.model_vetted_status = 'good' if (prediction > 0.5) else 'bad'
         if observation.model_vetted_status == observation.status:
             correctCount += 1
