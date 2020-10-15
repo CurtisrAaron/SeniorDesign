@@ -18,7 +18,7 @@ data_dir = pathlib.Path('./img')
 
 image_count = len(list(data_dir.glob('*/*.png')))
 
-print(f'number of datapoints = {image_count}'')
+print(f'number of datapoints = {image_count}')
 
 batch_size = 32
 img_height = 400

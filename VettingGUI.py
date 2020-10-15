@@ -56,7 +56,6 @@ obvIndex = 0
 
 # lets setup the layout
 framewidth = 40
-imgSize = (300, 600)
 filterVis = False
 framelayout = [
     [sg.Text('Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status']), key = 'metadata' , size = (framewidth,8))],
