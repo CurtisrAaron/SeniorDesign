@@ -107,29 +107,32 @@ while True:
         print(window['filter-user-good'].get())
         print(window['filter-user-bad'].get())
         query = Q()
+        box1 = Q()
+        box2 = Q()
+        box3 = Q()
         if window['filter-user-good'].get():
             print("Good is checked")
-            query = query | Q(user_vetted_status='good')
+            box1 = box1 | Q(user_vetted_status='good')
         if window['filter-user-bad'].get():
             print("Bad is checked")
-            query = query | Q(user_vetted_status='bad')
+            box1 = box1 | Q(user_vetted_status='bad')
         if window['filter-model-good'].get():
             print("Good is checked")
-            query = query | Q(model_vetted_status='good')
+            box2 = box2 | Q(model_vetted_status='good')
         if window['filter-model-bad'].get():
             print("Bad is checked")
-            query = query | Q(model_vetted_status='bad')
+            box2 = box2 | Q(model_vetted_status='bad')
         if window['filter-satnogs-good'].get():
             print("Good is checked")
-            query = query | Q(status='good')
+            box3 = box3 | Q(status='good')
         if window['filter-satnogs-bad'].get():
             print("Bad is checked")
-            query = query | Q(status='bad')
+            box3 = box3 | Q(status='bad')
+        query = box1 & box2 & box3
         observations = MetaData.objects(query)
         obvCount = len(observations)
         obvIndex = 0
         print('model good status bad = ' + str(obvCount))
-        observations = MetaData.objects(query)
         obvCount = len(observations)
     if event == 'Bad':
         observation = observations[obvIndex]
