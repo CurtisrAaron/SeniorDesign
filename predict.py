@@ -7,6 +7,7 @@ from DbModels import *
 from resize import *
 from tensorflow import keras
 from pathlib import Path
+from stats import *
 
 import tensorflow as tf
 import pickle
@@ -15,7 +16,7 @@ import numpy as np
 import sys
 import numpy
 
-#predict on individual images
+# predict on local database
 
 def load_image_file(img_path, dimension=(300, 600)):
     descr = "A single image classification test"
@@ -37,6 +38,7 @@ def load_image_file(img_path, dimension=(300, 600)):
 
 connect("Senior-Design-Project", host='mongodb://localhost/test')
 
+# lets find the models
 skfilelist = glob.glob(os.path.join('./skModels', "*.pickle"))
 tffilelist = glob.glob(os.path.join('./tfModels', "*"))
 
@@ -55,8 +57,8 @@ for model in tffilelist:
     print(str(count) + " " + model)
     count += 1
 
+# lets figure out which model to run
 val = -1
-
 while val == -1:
     try:
         val = int(input("Enter number of model you would like to run: "))
@@ -103,8 +105,7 @@ except:
     print('model name not valid')
     exit()
 
-
-observations = MetaData.objects.filter(Q(model_vetted_status = 'not vetted') | Q(model_vetted_status = None))
+# lets get all the observations
 observations = MetaData.objects()
 totalCount = len(observations)
 print('predicting = ' + str(len(observations)) + ' observations')
@@ -115,7 +116,6 @@ if is_sk:
     count = 0
     correctCount = 0
     for observation in observations:
-        #print(observation.waterfall)
         image = load_image_file(observation.waterfall, dimension = (resolution_width, resolution_height))
         observation.model_vetted_status = 'good' if svm.predict(image.data) else 'bad'
         observation.save()
@@ -143,7 +143,6 @@ if is_tf:
         image = np.expand_dims(image, axis = 0)
         prediction = model.predict([image], batch_size = 1)
         classification = model.predict_classes([image], batch_size = 1)
-        #print('prediction = ' + str(classification) + ' actual = ' + observation.status + ' prediction =' + str(prediction))
         observation.model_vetted_status = 'good' if (prediction > 0.5) else 'bad'
         if observation.model_vetted_status == observation.status:
             correctCount += 1
@@ -161,4 +160,5 @@ if is_tf:
             sys.stdout.write('\r{0} / {1} accuracy = {2}'.format(count, len(observations), round((correctCount / count), 2)) + dots)
             sys.stdout.flush()
 
-
+# lets graph the accuracy of the model
+graphAccuracy(modelname)

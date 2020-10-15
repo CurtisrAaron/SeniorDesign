@@ -10,6 +10,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 from datetime import datetime
 
+# tf is a tensor flow training script that trains a CNN model
 
 startime = datetime.now()
 
@@ -17,7 +18,7 @@ data_dir = pathlib.Path('./img')
 
 image_count = len(list(data_dir.glob('*/*.png')))
 
-print(image_count)
+print(f'number of datapoints = {image_count}'')
 
 batch_size = 32
 img_height = 400
@@ -40,10 +41,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
   batch_size=batch_size)
 
 class_names = train_ds.class_names
-print(class_names)
-
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-  
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
@@ -52,11 +50,10 @@ normalization_layer = layers.experimental.preprocessing.Rescaling(1./255)
 normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
 image_batch, labels_batch = next(iter(normalized_ds))
 first_image = image_batch[0]
-# Notice the pixels values are now in `[0,1]`.
-print(np.min(first_image), np.max(first_image))
 
 num_classes = 2
 
+# This is the CNN Model, The general philosophy is to start with shallow layers and as pooling goes on have deeper layers.
 model = Sequential([
   layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
   layers.Conv2D(32, 3, padding='same', activation='relu'),
@@ -73,25 +70,6 @@ model = Sequential([
   layers.Dense(12, activation='relu'),
   layers.Dense(num_classes - 1 ,activation='sigmoid'),
 ])
-# model = Sequential([
-#     layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
-#     layers.Conv2D(300,kernel_size=(3,3),activation='relu',input_shape=(img_height,img_width,3)),
-#     layers.Conv2D(200,kernel_size=(3,3),activation='relu'),
-#     layers.MaxPool2D(5,5),
-#     layers.Conv2D(180,kernel_size=(3,3),activation='relu'),
-#     layers.Conv2D(140,kernel_size=(3,3),activation='relu'), 
-#     layers.Conv2D(100,kernel_size=(3,3),activation='relu'),
-#     layers.Conv2D(50,kernel_size=(3,3),activation='relu'),
-#     layers.MaxPool2D(5,5),
-#     layers.Flatten(),
-#     layers.Dense(180,activation='relu'),
-#     layers.Dense(100,activation='relu'),
-#     layers.Dense(50,activation='relu'),
-#     layers.Dropout(rate=0.2),
-#     layers.Dense(num_classes)])
-
-
-#optimizer = tf.keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
 
 model.compile(optimizer=tf.keras.optimizers.SGD(),
               loss=tf.keras.losses.binary_crossentropy,
@@ -128,7 +106,8 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
-with open(('tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model.pickle'), 'wb') as handle:
-    pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# lets save the model with its resolution noted so we can run it in the future
+filename = 'tf-' + str(img_width) + 'x' + str(img_height) + '-' + datetime.now().strftime("%m-%d-%H-%M-%S") + 'model'
+model.save(filename)
 
 print('elapsed time = ' + str(datetime.now() - starttime))

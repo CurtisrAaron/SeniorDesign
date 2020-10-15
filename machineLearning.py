@@ -3,15 +3,16 @@ import pickle
 import sys
 
 from pathlib import Path
-from sklearn.utils import Bunch
 from sklearn import svm
 from sklearn.model_selection import train_test_split
+from sklearn.utils import Bunch
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn import metrics
 from datetime import datetime
 from resize import *
-import numpy
+
+# machineLearning trains an SVM model using sklearn
 
 #823 × 1606
 
@@ -48,7 +49,7 @@ def load_image_files(container_path, dimension=(400, 800)):
         for file in direc.iterdir():
             #img = imread(file)
 
-            img = numpy.array(modifiedImage(file))
+            img = np.array(modifiedImage(file))
 
             img_resized = resize(img, dimension, anti_aliasing=True, mode='reflect')
             flat_data.append(img_resized.flatten()) 
@@ -101,5 +102,6 @@ print(X_train)
 
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
+# lets save the model
 with open(('sk-' + str(resolution[0]) + 'x' + str(resolution[1]) + '-' + datetime.now().strftime("%m-%d_%H:%M:%S") + 'model.pickle'), 'wb') as handle:
     pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
