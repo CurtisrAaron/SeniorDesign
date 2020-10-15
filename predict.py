@@ -90,7 +90,6 @@ else:
 
 print(modelname[2:4])
 
-
 if not is_sk and not is_tf:
     print('no valid models')
     exit()
@@ -161,4 +160,4 @@ if is_tf:
             sys.stdout.flush()
 
 # lets graph the accuracy of the model
-graphAccuracy(modelname)
+graphAccuracy(modelname.split('.')[1].split('/')[2])
