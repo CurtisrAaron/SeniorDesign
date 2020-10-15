@@ -3,10 +3,13 @@ import PIL.Image
 import io
 import base64
 import mongoengine
+
 from DbModels import *
 
-#img = Image.open('img/good/2799468.png')
-#img.show()
+# VettingGUI is a python script that allows users to go through their local database
+# As they are going through their database of observations users can see the satnogs vetting,
+# a model vetting, and a user vetting if available. 
+# Additionally there are filters allowing users to only view a certain subset of the database.
 
 def convert_to_bytes(file_or_bytes, resize=None):
     '''
@@ -38,13 +41,20 @@ def convert_to_bytes(file_or_bytes, resize=None):
     del img
     return bio.getvalue()
 
-
+# lets connect to the database
 connect("Senior-Design-Project", host='mongodb://localhost/test')
 
+# lets figure out how big our image should be
+screenWidth, screenHeight = sg.Window.get_screen_size()
+scalingFactor = 0.8
+imgSize = (screenHeight*(scalingFactor / 2), screenHeight*scalingFactor)
+
+# lets query the database
 observations = MetaData.objects()
 obvCount = len(observations)
 obvIndex = 0
 
+# lets setup the layout
 framewidth = 40
 imgSize = (300, 600)
 filterVis = False
@@ -97,9 +107,7 @@ while True:
     if event == 'refresh':
         print(window['filter-user-good'].get())
         print(window['filter-user-bad'].get())
-        query = Q(status='')
-        #query = (Q(model_vetted_status='good') & Q(status='bad')) | (Q(model_vetted_status='bad') & Q(status='good'))
-        #query = query & Q(user_vetted_status='good')
+        query = Q()
         if window['filter-user-good'].get():
             print("Good is checked")
             query = query | Q(user_vetted_status='good')
@@ -121,7 +129,9 @@ while True:
         observations = MetaData.objects(query)
         obvCount = len(observations)
         obvIndex = 0
-        print('len = ' + str(obvCount))
+        print('model good status bad = ' + str(obvCount))
+        observations = MetaData.objects(query)
+        obvCount = len(observations)
     if event == 'Bad':
         observation = observations[obvIndex]
         observation.user_vetted_status = 'bad'

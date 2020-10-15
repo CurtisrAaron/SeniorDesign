@@ -10,3 +10,5 @@ model.pickle
 .DS_Store
 .machineLearning.py.swp
 *.zip
+skModels/*
+tfModels/*

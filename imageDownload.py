@@ -41,15 +41,19 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                     else:
                         badCount += 1
                         print("number of bad = " + str(badCount))
-                    file = open(path + str(observation['id']) + '.png', "wb")
-                    file.write(imgRequest.content)
-                    file.close()
-                    data = MetaData(
-                        transmitter_mode = observation["transmitter_mode"],
-                        status = observation["vetted_status"],
-                        Id = observation['id'],
-                        waterfall = path + str(observation['id']) + '.png'
-                    ).save()
+                    
+                    try:
+                        data = MetaData(
+                            transmitter_mode = observation["transmitter_mode"],
+                            status = observation["vetted_status"],
+                            Id = observation['id'],
+                            waterfall = path + str(observation['id']) + '.png'
+                        ).save()
+                        file = open(path + str(observation['id']) + '.png', "wb")
+                        file.write(imgRequest.content)
+                        file.close()
+                    except:
+                        pass
             
         print('len = ' + str(len(x.json())))
         if 'next' in x.links:
