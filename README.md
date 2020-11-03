@@ -1,6 +1,6 @@
 # Villanova University Class of 2021 Automation of Satelite Telemetry Vetting Senior Design Project
 
-This repo contains code and tools for building a maching learning model to automate satelite telemetry vetting.
+This repo contains code and tools for building a maching learning model to automate [satnogs](https://satnogs.org/) satelite telemetry vetting.
 
 ## Get started
 
