@@ -18,30 +18,27 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
     while shouldContinue and count < (numberOfObservations / 25):
         x = requests.get(url, params=params)
         print(x.status_code)
-
         observations = x.json()
-
         # add multithreading?
         badCount = 0
 
         for observation in observations:
             imgCount += 1
-            print("count = ", imgCount)
+            #print("count = ", imgCount)
             if updateFunction is not None:
-                updateFunction(imgCount, numberOfObservations)
+                updateFunction()
             if shouldDownloadImages:
                 imgURL = observation['waterfall']
                 status = observation['vetted_status'] == 'good'
                 if imgURL:
                     imgRequest = requests.get(imgURL, stream = True)
                     path = './img/bad/'
-
                     if status:
                         path = './img/good/'
+                        print('good')
                     else:
                         badCount += 1
-                        print("number of bad = " + str(badCount))
-                    
+                        print('bad')
                     try:
                         data = MetaData(
                             transmitter_mode = observation["transmitter_mode"],
