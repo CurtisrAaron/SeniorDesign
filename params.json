@@ -1,4 +1,4 @@
 {
     "ground_station" : ["105"],
-	"transmitter_mode" : ["CW", "FSK"]
+	"transmitter_mode" : ["SSTV", "CW", "FSK", "LRPT", "GFSK", "BPSK", "FM", "GFSK Rktr", "APT", "GMSK", "AFSK", "DUV", "AFSK SALSA", "MSK AX.100 Mode 5", "FSK AX.25 G3RUH", "BPSK PMT-A3", "USB", "CERTO", "FSK AX.100 Mode 5", "PSK31", "MSK AX.100 Mode 6", "MSK", "AFSK S-Net", "AHRPT", "WSJT", "FMN", "QPSK", "FFSK", "DQPSK", "QPSK31", "HRPT", "OQPSK", "LSB", "AFSK SALSAT", "PSK"]
 }
