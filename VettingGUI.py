@@ -46,7 +46,7 @@ connect("Senior-Design-Project", host='mongodb://localhost/test')
 
 # lets figure out how big our image should be
 screenWidth, screenHeight = sg.Window.get_screen_size()
-scalingFactor = 0.8
+scalingFactor = 0.9
 imgSize = (screenHeight*(scalingFactor / 2), screenHeight*scalingFactor)
 
 # lets query the database
@@ -58,7 +58,7 @@ obvIndex = 0
 framewidth = 40
 filterVis = False
 framelayout = [
-    [sg.Text('Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status']), key = 'metadata' , size = (framewidth,8))],
+    [sg.Text('Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}\n\nModel Score = {4}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status'], observations[obvIndex]['model_score']), key = 'metadata' , size = (framewidth,10))],
     [ sg.Button('Good' , size = (framewidth,4))],
     [ sg.Button('Bad' , size = (framewidth,4))],
     [ sg.Button('Next' , size = (framewidth,4))], 
@@ -151,7 +151,7 @@ while True:
         window['image'].update(data=convert_to_bytes(observations[obvIndex]['waterfall'], imgSize), visible=True)
         window['observation_id'].update(value='Observation ID: {0}'.format(observations[obvIndex]['Id']))
         window['observation_count'].update(value = '{0} / {1}'.format(obvIndex, obvCount))
-        window['metadata'].update(value='Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status']))
+        window['metadata'].update(value='Transmitter mode = {0}\n\nSatnogs Vetted Status = {1}\n\nUser Vetted Status = {2}\n\nModel Vetted Status = {3}\n\nModel Score = {4}'.format(observations[obvIndex]['transmitter_mode'], observations[obvIndex]['status'], observations[obvIndex]['user_vetted_status'], observations[obvIndex]['model_vetted_status'], observations[obvIndex]['model_score']))
     else:
         window['image'].update(visible=False)
 

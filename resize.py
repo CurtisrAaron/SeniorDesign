@@ -1,6 +1,6 @@
 from PIL import Image
 
-# this script resizes the waterfall to emphasize the center
+# this script manipulates the waterfall to emphasize the center
 
 def modifiedImage(imagePath):
     im = Image.open(imagePath)

@@ -12,3 +12,5 @@ model.pickle
 *.zip
 skModels/*
 tfModels/*
+graphs/*
+tfLiteModels/*

@@ -8,22 +8,22 @@ from resize import *
 from tensorflow import keras
 from pathlib import Path
 from stats import *
+from decimal import Decimal
 
 import tensorflow as tf
 import pickle
 import glob, os, os.path
 import numpy as np
 import sys
-import numpy
 
-# predict on local database
+# This script runs the model on the observations in the local database
 
 def load_image_file(img_path, dimension=(300, 600)):
     descr = "A single image classification test"
     images = []
     flat_data = []
     
-    img = numpy.array(modifiedImage(img_path))
+    img = np.array(modifiedImage(img_path))
     img_resized = resize(img, dimension, anti_aliasing=True, mode='reflect')
     flat_data.append(img_resized.flatten()) 
     images.append(img_resized)
@@ -68,7 +68,11 @@ while val == -1:
             count = 0
             print("models to run - ")
 
-            for model in filelist:
+            for model in skfilelist:
+                print(str(count) + " " + model)
+                count += 1
+
+            for model in tffilelist:
                 print(str(count) + " " + model)
                 count += 1
     except:
@@ -140,11 +144,12 @@ if is_tf:
         image = keras.preprocessing.image.load_img(Path(observation.waterfall), target_size=(resolution_height, resolution_width))
         image = keras.preprocessing.image.img_to_array(image)
         image = np.expand_dims(image, axis = 0)
-        prediction = model.predict([image], batch_size = 1)
+        prediction = model.predict([image], batch_size = 1)[0][0]
         classification = model.predict_classes([image], batch_size = 1)
         observation.model_vetted_status = 'good' if (prediction > 0.5) else 'bad'
         if observation.model_vetted_status == observation.status:
             correctCount += 1
+        observation.model_score = Decimal(float(prediction))
         observation.save()
         count += 1
         if count % 10 == 0:

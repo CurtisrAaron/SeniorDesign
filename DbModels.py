@@ -11,6 +11,7 @@ class MetaData(Document):
     waterfall = StringField()
     user_vetted_status = StringField(default = 'not vetted')
     model_vetted_status = StringField(default = 'not vetted')
+    model_score = DecimalField(default = 0)
 
 
     def json(self):
