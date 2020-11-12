@@ -84,8 +84,8 @@ history = model.fit(
   epochs=epochs
 )
 
-acc = history.history['val_binary_accuracy']
-val_acc = history.history['val_accuracy']
+acc = history.history['binary_accuracy']
+val_acc = history.history['val_binary_accuracy']
 
 loss=history.history['loss']
 val_loss=history.history['val_loss']

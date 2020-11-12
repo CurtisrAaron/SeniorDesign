@@ -71,8 +71,8 @@ ModelFilterLayout = [
     ]
 UserFilterLayout = [
     [sg.Text('User Vetted Status')],
-    [sg.Checkbox('good', key="filter-user-good", default=True), 
-    sg.Checkbox('bad', key="filter-user-bad", default=True)]
+    [sg.Checkbox('good', key="filter-user-good", default=False), 
+    sg.Checkbox('bad', key="filter-user-bad", default=False)]
     ]
 SatnogsFilterLayout = [
     [sg.Text('Satnog Vetted Status')],
@@ -80,7 +80,7 @@ SatnogsFilterLayout = [
     sg.Checkbox('bad', key="filter-satnogs-bad", default=True)]
     ]
 layout = [
-    [sg.Text('Observation ID: {0}'.format(observations[obvIndex]['Id']), key = 'observation_id'), sg.Text('{0} / {1}'.format(obvIndex, obvCount), key = 'observation_count', size = (65, 1)), sg.Button('filters'), sg.Button('refresh')],
+    [sg.Text('Observation ID: {0}'.format(observations[obvIndex]['Id']), key = 'observation_id'), sg.Text('{0} / {1}'.format(obvIndex, obvCount), key = 'observation_count', size = (65, 1)), sg.Button('filters'), sg.Button('refresh'), sg.Checkbox('sort by score', key='sort by score'), sg.Checkbox('sort by score descending', key='sort by score desc')],
     [sg.Frame('',[[sg.Frame('' , SatnogsFilterLayout, visible=True, key='satnogsfilterlayout', size=(60,10)),
         sg.Frame('' , ModelFilterLayout, visible=True, key='modelfilterlayout', size=(60,10)),
         sg.Frame('' , UserFilterLayout, visible=True, key='userfilterlayout', size=(60,10))]],size= (80,20), key='filterLayout', visible = filterVis) ],
@@ -129,7 +129,12 @@ while True:
             print("Bad is checked")
             box3 = box3 | Q(status='bad')
         query = box1 & box2 & box3
-        observations = MetaData.objects(query)
+        if window['sort by score'].get():
+            observations = MetaData.objects(query).order_by('model_score')
+        elif window['sort by score desc'].get():
+            observations = MetaData.objects(query).order_by('-model_score')
+        else:
+            observations = MetaData.objects(query)
         obvCount = len(observations)
         obvIndex = 0
         print('model good status bad = ' + str(obvCount))
