@@ -35,10 +35,10 @@ def downloadImages(numberOfObservations = 100, params = {}, updateFunction = Non
                     path = './img/bad/'
                     if status:
                         path = './img/good/'
-                        print('good')
+                        #print('good')
                     else:
                         badCount += 1
-                        print('bad')
+                        #print('bad')
                     try:
                         data = MetaData(
                             transmitter_mode = observation["transmitter_mode"],
