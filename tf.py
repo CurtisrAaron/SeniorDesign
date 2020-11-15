@@ -84,7 +84,7 @@ model = Sequential([
   layers.Conv2D(256, 3, padding='same', activation='relu'),
   layers.Dropout(rate=0.3),
   layers.Flatten(),
-  layers.Dense(738, activation='relu'), kfkfjf
+  layers.Dense(738, activation='relu'),
   layers.Dense(10, activation='relu'),
   layers.Dropout(rate=0.2),
   layers.Dense(num_classes - 1 ,activation='sigmoid'),
